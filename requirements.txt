@@ -1,0 +1,13 @@
+# Marketing Analytics — BigQuery + Looker
+# Python dependencies for local development and tooling
+
+google-cloud-bigquery>=3.11.0
+pandas>=2.0.0
+sqlfluff>=3.0.0
+dbt-bigquery>=1.7.0
+faker>=22.0.0
+tqdm>=4.66.0
+great-expectations>=0.18
+psycopg2-binary>=2.9.0
+streamlit>=1.30.0
+plotly>=5.18.0

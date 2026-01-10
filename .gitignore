@@ -1,0 +1,51 @@
+# BigQuery / GCP
+*.json
+!package.json
+!great_expectations/**/*.json
+service-account*.json
+credentials*.json
+*.key
+*.pem
+
+# Environment
+.env
+.env.*
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# BigQuery temp
+*.bq-cache/
+
+# Great Expectations runtime artifacts
+great_expectations/uncommitted/
+
+# Generated
+*.log
+pipeline_timing.txt
+
+# Data (optional — uncomment to exclude CSVs from version control)
+# data/*.csv
+
+# Docker local volumes
+pg_data/
