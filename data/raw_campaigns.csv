@@ -1,0 +1,51 @@
+campaign_id,campaign_name,channel,platform,start_date,end_date,budget_euros,target_audience,objective
+C001,Verano_Espana_Awareness,Meta_Ads,meta,2025-12-16,2026-01-19,10257.62,Carritos abandonados,consideration
+C002,Black_Friday_Conversion,TikTok_Ads,tiktok,2024-08-02,2024-11-24,48350.86,Clientes activos,conversion
+C003,Navidad_Remarketing,LinkedIn_Ads,linkedin,2024-02-13,2024-08-07,33751.66,Emprendedores digital nomads,awareness
+C004,TikTok_GenZ_Spring,Email,email,2025-03-08,2025-08-29,5006.79,Tráfico orgánico,consideration
+C005,LinkedIn_B2B_Leads,SEO,organic,2025-07-02,2025-09-12,46918.8,Turistas europa destino ES,conversion
+C006,Email_Loyalty_Q4,Google_Ads,google,2024-03-19,2024-04-24,4171.59,Pymes España 10-50 empleados,awareness
+C007,SEO_Content_Spain,Meta_Ads,meta,2024-01-25,2024-03-22,37851.44,18-28 España tendencias,consideration
+C008,Meta_Retargeting_Q1,TikTok_Ads,tiktok,2024-08-29,2024-11-13,45779.0,Directores marketing España,conversion
+C009,Google_Shopping_Summer,LinkedIn_Ads,linkedin,2025-04-07,2025-06-11,3402.04,Carritos abandonados,awareness
+C010,TikTok_Viral_Challenge,Email,email,2024-02-19,2024-06-17,17490.67,Clientes activos,consideration
+C011,Primera_Comunion_Promo,SEO,organic,2024-06-27,2024-10-11,34179.7,Directores marketing España,conversion
+C012,Dia_Madre_Campaign,Google_Ads,google,2025-09-12,2025-12-14,42871.44,Pymes España 10-50 empleados,awareness
+C013,San_Fermin_Regional,Meta_Ads,meta,2025-11-13,2026-01-03,45431.28,Padres primer hijo 25-40,consideration
+C014,Back_to_School_ES,TikTok_Ads,tiktok,2025-09-21,2025-12-02,23285.14,Directores marketing España,conversion
+C015,Rebajas_Enero_Meta,LinkedIn_Ads,linkedin,2024-02-02,2024-04-24,8042.5,Compradores e-commerce,awareness
+C016,Google_Autumn_Collections,Email,email,2024-12-26,2025-06-12,39327.47,Emprendedores digital nomads,consideration
+C017,B2B_SaaS_LinkedIn,SEO,organic,2024-12-12,2025-06-05,11328.36,Directores marketing España,conversion
+C018,Retargeting_Carritos_Q2,Google_Ads,google,2025-10-06,2025-12-18,1492.27,18-28 España tendencias,awareness
+C019,Travel_Summer_Meta,Meta_Ads,meta,2024-11-28,2025-01-05,44078.27,Padres primer hijo 25-40,consideration
+C020,Fitness_New_Year_Email,TikTok_Ads,tiktok,2025-09-10,2025-10-10,20040.06,Carritos abandonados,conversion
+C021,Food_Delivery_TikTok,LinkedIn_Ads,linkedin,2025-10-23,2026-03-19,44076.22,Emprendedores digital nomads,awareness
+C022,Real_Estate_SEO_Pack,Email,email,2025-01-14,2025-03-23,44975.77,Directores marketing España,consideration
+C023,Fintech_Acquisition_Google,SEO,organic,2024-03-09,2024-06-22,47022.98,Visitantes web 30d,conversion
+C024,Luxury_Fashion_Meta,Google_Ads,google,2024-03-16,2024-08-25,11221.12,Compradores e-commerce,awareness
+C025,Ecommerce_Flash_Sale,Meta_Ads,meta,2025-06-14,2025-10-31,22959.42,18-45 España,consideration
+C026,Spanish_Tourism_SEO,TikTok_Ads,tiktok,2025-07-08,2025-11-24,39309.51,Carritos abandonados,conversion
+C027,Gaming_GenZ_TikTok,LinkedIn_Ads,linkedin,2025-07-09,2025-09-05,39418.64,Visitantes web 30d,awareness
+C028,Startup_Fundraising_LinkedIn,Email,email,2025-10-13,2025-12-15,2925.92,Padres primer hijo 25-40,consideration
+C029,Subscription_Box_Email,SEO,organic,2024-11-25,2025-05-19,48400.37,Carritos abandonados,conversion
+C030,Pet_Care_Remarketing,Google_Ads,google,2025-02-11,2025-06-09,2126.32,Pymes España 10-50 empleados,awareness
+C031,Organic_Food_Awareness,Meta_Ads,meta,2024-10-05,2025-02-20,48428.89,25-55 compradores online,consideration
+C032,Home_Decor_Pinterest_ES,TikTok_Ads,tiktok,2024-11-07,2025-01-01,11479.01,18-28 España tendencias,conversion
+C033,Festival_Music_Promo,LinkedIn_Ads,linkedin,2024-11-16,2025-03-16,43384.72,Carritos abandonados,awareness
+C034,Language_App_Acquisition,Email,email,2024-09-14,2024-12-11,46541.24,Padres primer hijo 25-40,consideration
+C035,Insurance_B2C_Google,SEO,organic,2025-01-15,2025-06-12,9962.94,Pymes España 10-50 empleados,conversion
+C036,Nursery_School_Meta,Google_Ads,google,2025-03-25,2025-08-10,6774.2,Tráfico orgánico,awareness
+C037,Used_Cars_SEO_ES,Meta_Ads,meta,2024-02-14,2024-08-12,6088.26,Compradores e-commerce,consideration
+C038,Smartphone_Launch_TikTok,TikTok_Ads,tiktok,2025-11-17,2026-03-21,20803.38,Turistas europa destino ES,conversion
+C039,University_Leads_LinkedIn,LinkedIn_Ads,linkedin,2024-10-17,2025-01-05,16499.9,Padres primer hijo 25-40,awareness
+C040,Holiday_Gift_Guide_Email,Email,email,2025-03-29,2025-06-01,27610.52,Turistas europa destino ES,consideration
+C041,Winter_Sports_Meta,SEO,organic,2024-05-11,2024-08-16,13755.73,Emprendedores digital nomads,conversion
+C042,Gastronomy_Tour_SEO,Google_Ads,google,2025-04-05,2025-09-22,8295.64,Visitantes web 30d,awareness
+C043,Gym_Membership_Q1,Meta_Ads,meta,2025-08-31,2025-12-22,33172.88,18-45 España,consideration
+C044,Streaming_Service_Google,TikTok_Ads,tiktok,2025-11-29,2026-03-21,35241.64,25-55 compradores online,conversion
+C045,Eco_Products_TikTok,LinkedIn_Ads,linkedin,2024-06-04,2024-07-09,2214.51,18-45 España,awareness
+C046,Wedding_Season_Meta,Email,email,2025-06-09,2025-07-13,8078.63,25-55 compradores online,consideration
+C047,Tax_Software_Q1_LinkedIn,SEO,organic,2024-09-12,2024-12-06,26199.44,Pymes España 10-50 empleados,conversion
+C048,Beauty_Spring_Email,Google_Ads,google,2025-10-07,2026-03-21,43981.2,Jóvenes profesionales Madrid,awareness
+C049,Apartment_Rental_SEO,Meta_Ads,meta,2025-05-22,2025-11-04,15851.91,Compradores e-commerce,consideration
+C050,Barcelona_Events_Meta,TikTok_Ads,tiktok,2024-07-18,2025-01-04,13602.6,Tráfico orgánico,conversion
