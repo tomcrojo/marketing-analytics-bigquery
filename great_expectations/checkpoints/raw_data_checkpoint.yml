@@ -1,0 +1,66 @@
+# Checkpoint: validate all raw CSV data before BigQuery loading
+# Runs all 3 raw expectation suites against data/ CSV files
+
+name: raw_data_checkpoint
+config_version: 1.0
+class_name: Checkpoint
+validations:
+  - batch_request:
+      datasource_name: csv_datasource
+      data_connector_name: default_inferred_data_connector_name
+      data_asset_name: raw_ad_impressions
+      data_connector_query:
+        index: -1
+    expectation_suite_name: raw_impressions_suite
+    action_list:
+      - name: store_validation_result
+        action:
+          class_name: StoreValidationResultAction
+      - name: update_data_docs
+        action:
+          class_name: UpdateDataDocsAction
+      - name: store_evaluation_params
+        action:
+          class_name: StoreEvaluationParametersAction
+    runtime_configuration:
+      result_format: BASIC
+
+  - batch_request:
+      datasource_name: csv_datasource
+      data_connector_name: default_inferred_data_connector_name
+      data_asset_name: raw_clicks
+      data_connector_query:
+        index: -1
+    expectation_suite_name: raw_clicks_suite
+    action_list:
+      - name: store_validation_result
+        action:
+          class_name: StoreValidationResultAction
+      - name: update_data_docs
+        action:
+          class_name: UpdateDataDocsAction
+      - name: store_evaluation_params
+        action:
+          class_name: StoreEvaluationParametersAction
+    runtime_configuration:
+      result_format: BASIC
+
+  - batch_request:
+      datasource_name: csv_datasource
+      data_connector_name: default_inferred_data_connector_name
+      data_asset_name: raw_conversions
+      data_connector_query:
+        index: -1
+    expectation_suite_name: raw_conversions_suite
+    action_list:
+      - name: store_validation_result
+        action:
+          class_name: StoreValidationResultAction
+      - name: update_data_docs
+        action:
+          class_name: UpdateDataDocsAction
+      - name: store_evaluation_params
+        action:
+          class_name: StoreEvaluationParametersAction
+    runtime_configuration:
+      result_format: BASIC
