@@ -1,0 +1,26 @@
+# Checkpoint: validate mart dashboard output data
+# Runs after transformations to verify aggregated metrics
+
+name: mart_data_checkpoint
+config_version: 1.0
+class_name: Checkpoint
+validations:
+  - batch_request:
+      datasource_name: csv_datasource
+      data_connector_name: default_inferred_data_connector_name
+      data_asset_name: rpt_marketing_dashboard
+      data_connector_query:
+        index: -1
+    expectation_suite_name: mart_dashboard_suite
+    action_list:
+      - name: store_validation_result
+        action:
+          class_name: StoreValidationResultAction
+      - name: update_data_docs
+        action:
+          class_name: UpdateDataDocsAction
+      - name: store_evaluation_params
+        action:
+          class_name: StoreEvaluationParametersAction
+    runtime_configuration:
+      result_format: BASIC
