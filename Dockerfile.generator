@@ -1,0 +1,11 @@
+FROM python:3.11-slim
+
+WORKDIR /usr/src/app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY scripts/generate_large_data.py ./scripts/
+
+ENTRYPOINT ["python", "scripts/generate_large_data.py"]
+CMD ["--sample"]

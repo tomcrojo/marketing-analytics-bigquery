@@ -1,0 +1,71 @@
+services:
+  # PostgreSQL — local BigQuery substitute
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: analytics
+      POSTGRES_PASSWORD: analytics_pass
+      POSTGRES_DB: marketing
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./sql/setup:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U analytics -d marketing"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Data generator
+  generator:
+    build:
+      context: .
+      dockerfile: Dockerfile.generator
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./data:/usr/src/app/data
+    environment:
+      DATABASE_URL: postgresql://analytics:analytics_pass@postgres:5432/marketing
+    profiles:
+      - generate
+
+  # Pipeline runner
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile.pipeline
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./sql:/usr/src/app/sql
+      - ./data:/usr/src/app/data
+      - ./great_expectations:/usr/src/app/great_expectations
+      - ./scripts:/usr/src/app/scripts
+    environment:
+      DATABASE_URL: postgresql://analytics:analytics_pass@postgres:5432/marketing
+    profiles:
+      - pipeline
+
+  observability:
+    build:
+      context: .
+      dockerfile: Dockerfile.pipeline
+    ports:
+      - "8503:8501"
+    volumes:
+      - ./data:/usr/src/app/data
+      - ./src:/usr/src/app/src
+      - ./great_expectations:/usr/src/app/great_expectations
+    command: >
+      streamlit run src/data_observability/dashboard.py
+      --server.port=8501
+      --server.address=0.0.0.0
+    profiles:
+      - observability
+
+volumes:
+  pg_data:
