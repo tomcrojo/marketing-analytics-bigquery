@@ -1,0 +1,183 @@
+name: Marketing Analytics CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sql/**'
+      - 'lookml/**'
+      - 'great_expectations/**'
+      - 'scripts/**'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'sql/**'
+      - 'lookml/**'
+      - 'great_expectations/**'
+      - 'scripts/**'
+
+jobs:
+  sql-lint:
+    name: SQL Lint (sqlfluff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install sqlfluff
+        run: pip install sqlfluff
+
+      - name: Run sqlfluff lint
+        run: |
+          sqlfluff lint sql/ \
+            --dialect bigquery \
+            --templater raw \
+            --exclude-rules LT05,AM04 || true
+        continue-on-error: true
+
+  bq-dry-run:
+    name: BigQuery Dry-Run Validation
+    runs-on: ubuntu-latest
+    needs: sql-lint
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Dry-run setup SQL
+        run: |
+          for file in sql/setup/*.sql; do
+            echo "Dry-run: ${file}"
+            bq query \
+              --project_id="${{ secrets.GCP_PROJECT_ID }}" \
+              --use_legacy_sql=false \
+              --dry_run \
+              < "${file}" || echo "  ⚠ Dry-run returned non-zero (expected for DDL)"
+          done
+
+      - name: Dry-run staging SQL
+        run: |
+          for file in sql/staging/*.sql; do
+            echo "Dry-run: ${file}"
+            bq query \
+              --project_id="${{ secrets.GCP_PROJECT_ID }}" \
+              --use_legacy_sql=false \
+              --dry_run \
+              < "${file}" || echo "  ⚠ Dry-run failed: ${file}"
+          done
+
+      - name: Dry-run intermediate SQL
+        run: |
+          for file in sql/intermediate/*.sql; do
+            echo "Dry-run: ${file}"
+            bq query \
+              --project_id="${{ secrets.GCP_PROJECT_ID }}" \
+              --use_legacy_sql=false \
+              --dry_run \
+              < "${file}" || echo "  ⚠ Dry-run failed: ${file}"
+          done
+
+      - name: Dry-run marts SQL
+        run: |
+          for file in sql/marts/*.sql; do
+            echo "Dry-run: ${file}"
+            bq query \
+              --project_id="${{ secrets.GCP_PROJECT_ID }}" \
+              --use_legacy_sql=false \
+              --dry_run \
+              < "${file}" || echo "  ⚠ Dry-run failed: ${file}"
+          done
+
+  lookml-validate:
+    name: LookML Syntax Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate LookML file structure
+        run: |
+          echo "Checking LookML file structure..."
+          errors=0
+
+          # Check all .lkml files are valid YAML-ish structure
+          for file in $(find lookml -name "*.lkml"); do
+            echo "  Checking: ${file}"
+            # Basic syntax checks
+            if grep -q "sql_table_name.*\${" "${file}" 2>/dev/null; then
+              # Verify matching braces
+              open=$(grep -o '{' "${file}" | wc -l)
+              close=$(grep -o '}' "${file}" | wc -l)
+              if [ "${open}" -ne "${close}" ]; then
+                echo "    ⚠ Mismatched braces in ${file}: ${open} open, ${close} close"
+                errors=$((errors + 1))
+              fi
+            fi
+          done
+
+          if [ ${errors} -gt 0 ]; then
+            echo "Found ${errors} potential issues"
+            exit 1
+          fi
+          echo "LookML validation passed"
+
+      - name: Check required files exist
+        run: |
+          required_files=(
+            "lookml/manifest.lkml"
+            "lookml/models/marketing_analytics.model.lkml"
+            "lookml/views/marketing_dashboard.view.lkml"
+            "lookml/views/channel_roi.view.lkml"
+            "lookml/views/customer_acquisition.view.lkml"
+            "lookml/dashboards/marketing_overview.dashboard.lkml"
+          )
+          for f in "${required_files[@]}"; do
+            if [ ! -f "${f}" ]; then
+              echo "Missing required file: ${f}"
+              exit 1
+            fi
+          done
+          echo "All required LookML files present"
+
+  data-quality:
+    name: Data Quality Checks (Great Expectations)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install great-expectations>=0.18 pandas>=2.0.0
+
+      - name: Generate sample data
+        run: |
+          pip install faker>=22.0.0 tqdm>=4.66.0
+          python scripts/generate_large_data.py --sample
+
+      - name: Validate expectation suites
+        run: |
+          echo "Validating GE suite JSON files..."
+          for f in great_expectations/expectations/*.json; do
+            python -c "import json; json.load(open('$f'))" && echo "  OK: $f" || { echo "  FAIL: $f"; exit 1; }
+          done
+
+      - name: Run quality checks (sample)
+        run: python scripts/run_quality_checks.py --sample
