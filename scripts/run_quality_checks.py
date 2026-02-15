@@ -41,8 +41,7 @@ except ImportError:
 
 def get_context():
     """Create and return the GE context."""
-    context = gx.data_context.DataContext(context_root_dir=str(GE_ROOT))
-    return context
+    return gx.get_context(context_root_dir=str(GE_ROOT))
 
 
 def build_batch_request(data_asset_name: str, file_path: str) -> dict:
@@ -81,8 +80,17 @@ def run_suite(context, suite_name: str, file_name: str, sample: bool = False):
 
     print(f"  Running suite '{suite_name}' against {file_name} ({len(df):,} rows)...")
 
-    validator = context.sources.pandas_default.read_dataframe(df)
-    result = validator.validate(expectation_suite_name=suite_name)
+    data_asset_name = Path(file_name).stem
+    validator = context.get_validator(
+        batch_request={
+            "datasource_name": "csv_datasource",
+            "data_connector_name": "default_inferred_data_connector_name",
+            "data_asset_name": data_asset_name,
+            "data_connector_query": {"index": -1},
+        },
+        expectation_suite_name=suite_name,
+    )
+    result = validator.validate()
 
     success = result.success
     stats = result.statistics
