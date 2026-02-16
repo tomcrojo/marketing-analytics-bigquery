@@ -50,16 +50,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check GCP credentials availability
+        id: gcp-creds
+        run: |
+          if [ -n "${{ secrets.WIF_PROVIDER }}" ] && \
+             [ -n "${{ secrets.WIF_SERVICE_ACCOUNT }}" ] && \
+             [ -n "${{ secrets.GCP_PROJECT_ID }}" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Authenticate to Google Cloud
+        if: steps.gcp-creds.outputs.available == 'true'
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
 
       - name: Set up Cloud SDK
+        if: steps.gcp-creds.outputs.available == 'true'
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Dry-run setup SQL
+        if: steps.gcp-creds.outputs.available == 'true'
         run: |
           for file in sql/setup/*.sql; do
             echo "Dry-run: ${file}"
@@ -71,6 +85,7 @@ jobs:
           done
 
       - name: Dry-run staging SQL
+        if: steps.gcp-creds.outputs.available == 'true'
         run: |
           for file in sql/staging/*.sql; do
             echo "Dry-run: ${file}"
@@ -82,6 +97,7 @@ jobs:
           done
 
       - name: Dry-run intermediate SQL
+        if: steps.gcp-creds.outputs.available == 'true'
         run: |
           for file in sql/intermediate/*.sql; do
             echo "Dry-run: ${file}"
@@ -93,6 +109,7 @@ jobs:
           done
 
       - name: Dry-run marts SQL
+        if: steps.gcp-creds.outputs.available == 'true'
         run: |
           for file in sql/marts/*.sql; do
             echo "Dry-run: ${file}"
@@ -102,6 +119,10 @@ jobs:
               --dry_run \
               < "${file}" || echo "  ⚠ Dry-run failed: ${file}"
           done
+
+      - name: Skip dry-run without GCP credentials
+        if: steps.gcp-creds.outputs.available != 'true'
+        run: echo "Skipping BigQuery dry-run because GCP credentials are not configured for this public repo."
 
   lookml-validate:
     name: LookML Syntax Validation
@@ -165,7 +186,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install great-expectations>=0.18 pandas>=2.0.0
+        run: pip install "great-expectations>=0.18,<1.0" "pandas>=2.0.0"
 
       - name: Generate sample data
         run: |
@@ -180,4 +201,4 @@ jobs:
           done
 
       - name: Run quality checks (sample)
-        run: python scripts/run_quality_checks.py --sample
+        run: python scripts/run_quality_checks.py --suite raw --sample
